@@ -1,9 +1,9 @@
 {
-	"name": "pipeline3",
+	"name": "pipeline4",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data3",
+				"name": "Copy data4",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
