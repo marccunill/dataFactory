@@ -1,0 +1,80 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Distritos",
+						"type": "DatasetReference"
+					},
+					"name": "Municipios"
+				},
+				{
+					"dataset": {
+						"referenceName": "AB_DIM_DISTRITO",
+						"type": "DatasetReference"
+					},
+					"name": "DimDistrito"
+				},
+				{
+					"dataset": {
+						"referenceName": "AB_DIM_DISTRITO",
+						"type": "DatasetReference"
+					},
+					"name": "MaxSK"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AB_DIM_DISTRITO",
+						"type": "DatasetReference"
+					},
+					"name": "InsertDimMunicipios"
+				},
+				{
+					"dataset": {
+						"referenceName": "AB_DIM_DISTRITO",
+						"type": "DatasetReference"
+					},
+					"name": "sinkUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "NuevoActualiza"
+				},
+				{
+					"name": "SurrogateKey1"
+				},
+				{
+					"name": "Exists1"
+				},
+				{
+					"name": "DerivedColumn2"
+				},
+				{
+					"name": "ExistingDimDistrito"
+				},
+				{
+					"name": "Lookup1"
+				},
+				{
+					"name": "JoinMax"
+				},
+				{
+					"name": "DerivedColumn3"
+				},
+				{
+					"name": "DerivedColumn4"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tNUM_MUN_SGAB as string,\n\t\tNUM_DTE_MUNI as string,\n\t\tNOM_DTE_MUNI as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> Municipios\nsource(output(\n\t\tSK_DISTRITO as integer,\n\t\tID_MUNICIPIO as string,\n\t\tID_DISTRITO as string,\n\t\tDES_DISTRITO as string,\n\t\tREG_HASH as string,\n\t\tFECHA_EFECTIVA as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table',\n\tstaged: false) ~> DimDistrito\nsource(output(\n\t\tmax_SK_DISTRITO as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'select max_SK_DISTRITO = isnull(MAX(SK_DISTRITO), 0) from dbo.DIM_DISTRITO',\n\tformat: 'query',\n\tstaged: false) ~> MaxSK\nLookup1 split(isNull(REG_HASH),\n\tdisjoint: false) ~> NuevoActualiza@(Nuevo, Actualiza)\nJoinMax keyGenerate(output(new_SK_DISTRITO as long),\n\tstartAt: 1L) ~> SurrogateKey1\nDerivedColumn2, ExistingDimDistrito exists(hash == REG_HASH,\n\tnegate:true,\n\tbroadcast: 'none')~> Exists1\nMunicipios derive(hash = sha2(256, NUM_MUN_SGAB,NUM_DTE_MUNI)) ~> DerivedColumn2\nDimDistrito select(mapColumn(\n\t\tSK_DISTRITO,\n\t\tREG_HASH\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> ExistingDimDistrito\nExists1, ExistingDimDistrito lookup(hash == REG_HASH,\n\tbroadcast: 'none')~> Lookup1\nNuevoActualiza@Nuevo, MaxSK join(1==1,\n\tjoinType:'cross',\n\tbroadcast: 'none')~> JoinMax\nSurrogateKey1 derive(SK_DISTRITO = max_SK_DISTRITO + new_SK_DISTRITO,\n\t\tFECHA_EFECTIVA = currentUTC()) ~> DerivedColumn3\nNuevoActualiza@Actualiza derive(fechaActualizacion = currentUTC()) ~> DerivedColumn4\nDerivedColumn4 alterRow(updateIf(1==1)) ~> AlterRow1\nDerivedColumn3 sink(input(\n\t\tSK_DISTRITO as integer,\n\t\tID_MUNICIPIO as string,\n\t\tID_DISTRITO as string,\n\t\tDES_DISTRITO as string,\n\t\tREG_HASH as string,\n\t\tFECHA_EFECTIVA as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tmapColumn(\n\t\tSK_DISTRITO,\n\t\tID_MUNICIPIO = NUM_MUN_SGAB,\n\t\tID_DISTRITO = NUM_DTE_MUNI,\n\t\tDES_DISTRITO = NOM_DTE_MUNI,\n\t\tREG_HASH = hash,\n\t\tFECHA_EFECTIVA\n\t)) ~> InsertDimMunicipios\nAlterRow1 sink(input(\n\t\tSK_DISTRITO as integer,\n\t\tID_MUNICIPIO as string,\n\t\tID_DISTRITO as string,\n\t\tDES_DISTRITO as string,\n\t\tREG_HASH as string,\n\t\tFECHA_EFECTIVA as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:false,\n\tupdateable:true,\n\tupsertable:false,\n\tkeys:['SK_DISTRITO'],\n\tformat: 'table',\n\tstaged: true,\n\tmapColumn(\n\t\tSK_DISTRITO,\n\t\tID_MUNICIPIO = NUM_MUN_SGAB,\n\t\tID_DISTRITO = NUM_DTE_MUNI,\n\t\tDES_DISTRITO = NOM_DTE_MUNI,\n\t\tREG_HASH = hash,\n\t\tFECHA_EFECTIVA = fechaActualizacion\n\t)) ~> sinkUpdate"
+		}
+	}
+}

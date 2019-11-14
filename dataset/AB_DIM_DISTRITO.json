@@ -1,0 +1,43 @@
+{
+	"name": "AB_DIM_DISTRITO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDW1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "SK_DISTRITO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ID_MUNICIPIO",
+				"type": "varchar"
+			},
+			{
+				"name": "ID_DISTRITO",
+				"type": "varchar"
+			},
+			{
+				"name": "DES_DISTRITO",
+				"type": "varchar"
+			},
+			{
+				"name": "REG_HASH",
+				"type": "varchar"
+			},
+			{
+				"name": "FECHA_EFECTIVA",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "dim_distrito"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
