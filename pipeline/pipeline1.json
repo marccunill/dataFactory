@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"pythonFile": "dbfs:/FileStore/tables/testPython.py"
+					"pythonFile": "dbfs:/FileStore/tables/testApp.py"
 				},
 				"linkedServiceName": {
 					"referenceName": "LinkFormacionDB",
