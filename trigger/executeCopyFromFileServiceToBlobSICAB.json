@@ -1,0 +1,17 @@
+{
+	"name": "executeCopyFromFileServiceToBlobSICAB",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2019-11-27T10:44:00.000Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
