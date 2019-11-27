@@ -41,10 +41,7 @@
 				"inputs": [
 					{
 						"referenceName": "toFileStorage",
-						"type": "DatasetReference",
-						"parameters": {
-							"Filter": "muestraSicab_"
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -56,9 +53,13 @@
 			}
 		],
 		"parameters": {
-			"marc": {
+			"mask": {
 				"type": "string",
-				"defaultValue": "opt"
+				"defaultValue": "muestraSicab_"
+			},
+			"format": {
+				"type": "string",
+				"defaultValue": ".txt"
 			}
 		},
 		"annotations": []
