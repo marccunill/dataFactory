@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureFileStorageLocation",
 				"fileName": {
-					"value": "@concat('muestraSicab_',formatDateTime(utcnow(),'yyyyMMdd'),'.txt')",
+					"value": "@concat(pipeline().parameters.mask,formatDateTime(utcnow(),'yyyyMMdd'),@pipeline().parameters.format)",
 					"type": "Expression"
 				}
 			},
