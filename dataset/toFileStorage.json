@@ -10,7 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureFileStorageLocation",
-				"fileName": "muestraSicab.txt"
+				"fileName": {
+					"value": "@concat('muestraSicab_',formatDateTime(utcnow(),'yyyyMMdd'),'.txt')",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
