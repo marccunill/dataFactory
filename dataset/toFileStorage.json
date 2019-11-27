@@ -6,8 +6,13 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"hola": {
-				"type": "string"
+			"mask": {
+				"type": "string",
+				"defaultValue": "muestraSicab_"
+			},
+			"format": {
+				"type": "string",
+				"defaultValue": ".txt"
 			}
 		},
 		"annotations": [],
@@ -16,7 +21,7 @@
 			"location": {
 				"type": "AzureFileStorageLocation",
 				"fileName": {
-					"value": "@concat('muestraSicab_',formatDateTime(utcnow(),'yyyyMMdd'),'.txt')",
+					"value": "@concat(dataset().mask, formatDateTime(utcnow(),'yyyyMMdd'), dataset().format)",
 					"type": "Expression"
 				}
 			},
