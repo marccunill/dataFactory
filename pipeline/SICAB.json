@@ -41,7 +41,10 @@
 				"inputs": [
 					{
 						"referenceName": "toFileStorage",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Filter": "muestraSicab_"
+						}
 					}
 				],
 				"outputs": [
