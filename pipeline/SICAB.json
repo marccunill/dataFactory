@@ -58,7 +58,7 @@
 		"parameters": {
 			"marc": {
 				"type": "string",
-				"defaultValue": "'opt'"
+				"defaultValue": "opt"
 			}
 		},
 		"annotations": []
