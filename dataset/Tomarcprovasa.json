@@ -12,9 +12,9 @@
 				"type": "AzureBlobStorageLocation",
 				"container": "sicab"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "|",
 			"escapeChar": "\\",
-			"quoteChar": "\""
+			"quoteChar": ""
 		},
 		"schema": [
 			{
