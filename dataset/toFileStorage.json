@@ -9,8 +9,7 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureFileStorageLocation",
-				"fileName": "muestraSicab.txt"
+				"type": "AzureFileStorageLocation"
 			},
 			"columnDelimiter": "|",
 			"escapeChar": "\\",
