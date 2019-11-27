@@ -5,6 +5,11 @@
 			"referenceName": "LinkToAzureFileStorage",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"hola": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
